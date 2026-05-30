@@ -1,0 +1,2842 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus — Connect Beyond</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════════════════
+   NEXUS SOCIAL — SINGLE FILE APP
+   Design: Cinematic dark luxury + vibrant aurora accents
+═══════════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #05070F;
+  --bg2: #080C18;
+  --surface: #0C1022;
+  --surface2: #111828;
+  --surface3: #162038;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.11);
+  --border3: rgba(255,255,255,0.18);
+  --text: #ECF0FF;
+  --text2: #8B95B0;
+  --text3: #4A5470;
+  --violet: #7C6FFF;
+  --cyan: #00D4FF;
+  --pink: #FF4FA3;
+  --amber: #FFB347;
+  --green: #00E5A0;
+  --red: #FF5C7A;
+  --gold: #F5C842;
+  --gradient: linear-gradient(135deg, #7C6FFF 0%, #00D4FF 100%);
+  --gradient2: linear-gradient(135deg, #FF4FA3, #7C6FFF);
+  --gradient3: linear-gradient(135deg, #00E5A0, #00D4FF);
+  --glow: 0 0 40px rgba(124,111,255,0.25);
+  --shadow: 0 20px 60px rgba(0,0,0,0.6);
+  --radius: 18px;
+  --sidebar-w: 270px;
+  --right-w: 310px;
+  --transition: 0.22s cubic-bezier(0.4,0,0.2,1);
+}
+
+[data-theme="light"] {
+  --bg: #F0F2FF;
+  --bg2: #E8EAFE;
+  --surface: #FFFFFF;
+  --surface2: #F5F7FF;
+  --surface3: #EEF0FF;
+  --border: rgba(0,0,0,0.07);
+  --border2: rgba(0,0,0,0.12);
+  --border3: rgba(0,0,0,0.2);
+  --text: #0A0E24;
+  --text2: #4A5270;
+  --text3: #9AA3BF;
+  --shadow: 0 20px 60px rgba(0,0,0,0.1);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: default;
+}
+
+/* Custom Cursor */
+body::after {
+  content: '';
+  position: fixed;
+  width: 8px; height: 8px;
+  background: var(--violet);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transition: transform 0.15s;
+  mix-blend-mode: screen;
+}
+
+.hidden { display: none !important; }
+input, textarea, button { font-family: 'Outfit', sans-serif; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ═══ NOISE OVERLAY ════════════════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   AUTH SCREEN
+═══════════════════════════════════════════════════════════════════ */
+#auth-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.auth-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-left-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #05070F 0%, #0C1040 50%, #05070F 100%);
+}
+
+.aurora {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+.aurora-1 { width: 600px; height: 600px; background: rgba(124,111,255,0.2); top: -150px; left: -150px; animation: drift 12s ease-in-out infinite; }
+.aurora-2 { width: 500px; height: 500px; background: rgba(0,212,255,0.15); bottom: -150px; right: -100px; animation: drift 9s ease-in-out infinite reverse; }
+.aurora-3 { width: 400px; height: 400px; background: rgba(255,79,163,0.12); top: 50%; left: 40%; animation: drift 15s ease-in-out infinite 3s; }
+
+@keyframes drift {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(40px,-30px) scale(1.08); }
+  66% { transform: translate(-30px,40px) scale(0.92); }
+}
+
+.auth-hero { position: relative; z-index: 1; text-align: center; max-width: 480px; }
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px; height: 80px;
+  background: linear-gradient(135deg, rgba(124,111,255,0.2), rgba(0,212,255,0.2));
+  border: 1px solid rgba(124,111,255,0.4);
+  border-radius: 24px;
+  margin-bottom: 24px;
+  position: relative;
+  animation: pulse-border 3s ease-in-out infinite;
+}
+@keyframes pulse-border {
+  0%,100% { box-shadow: 0 0 0 0 rgba(124,111,255,0.3); }
+  50% { box-shadow: 0 0 0 12px rgba(124,111,255,0); }
+}
+
+.brand-mark svg { width: 44px; height: 44px; }
+
+.auth-title {
+  font-size: 4rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.auth-subtitle {
+  font-size: 1.05rem;
+  color: var(--text2);
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+.feature-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.pill {
+  padding: 8px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 40px;
+  font-size: 0.8rem;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pill span { color: var(--violet); }
+
+/* Auth Form Panel */
+.auth-right {
+  width: 480px;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 44px;
+  position: relative;
+  overflow-y: auto;
+}
+
+.auth-form-title { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 6px; }
+.auth-form-sub { font-size: 0.85rem; color: var(--text2); margin-bottom: 32px; }
+
+.auth-tabs-row {
+  display: flex;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 4px;
+  margin-bottom: 28px;
+}
+
+.atab {
+  flex: 1;
+  padding: 11px;
+  background: none;
+  border: none;
+  border-radius: 11px;
+  color: var(--text2);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.atab.active {
+  background: var(--surface2);
+  color: var(--text);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+
+.aform { display: none; flex-direction: column; gap: 13px; }
+.aform.active { display: flex; }
+
+.field-label { font-size: 0.75rem; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+
+.input-wrap {
+  position: relative;
+}
+
+.input-wrap input {
+  width: 100%;
+  padding: 13px 16px 13px 46px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  color: var(--text);
+  font-size: 0.9rem;
+  transition: all var(--transition);
+  outline: none;
+}
+.input-wrap input:focus {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 3px rgba(124,111,255,0.15);
+}
+.input-wrap input::placeholder { color: var(--text3); }
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: var(--text3);
+  pointer-events: none;
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.btn-auth {
+  width: 100%;
+  padding: 14px;
+  background: var(--gradient);
+  border: none;
+  border-radius: 13px;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  overflow: hidden;
+  margin-top: 6px;
+}
+.btn-auth::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+.btn-auth:hover::before { opacity: 0.1; }
+.btn-auth:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(124,111,255,0.5); }
+.btn-auth:active { transform: translateY(0); }
+
+.demo-hint {
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text3);
+  margin-top: 8px;
+  padding: 10px;
+  background: rgba(124,111,255,0.05);
+  border: 1px dashed rgba(124,111,255,0.2);
+  border-radius: 10px;
+}
+.demo-hint code {
+  background: rgba(124,111,255,0.15);
+  color: var(--violet);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 0.82rem;
+}
+
+.auth-error {
+  color: var(--red);
+  font-size: 0.82rem;
+  text-align: center;
+  min-height: 20px;
+  padding: 0 4px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   MAIN APP LAYOUT
+═══════════════════════════════════════════════════════════════════ */
+#app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ═══ SIDEBAR ═══════════════════════════════════════════════════════ */
+.sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 14px;
+  z-index: 200;
+  transition: width 0.3s;
+}
+
+.sb-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.sb-logo {
+  width: 38px; height: 38px;
+  background: var(--gradient);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.sb-name {
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.sb-tagline { font-size: 0.68rem; color: var(--text3); letter-spacing: 0.05em; margin-top: 1px; }
+
+.nav-section-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0 12px;
+  margin: 8px 0 6px;
+}
+
+.nav-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 12px 14px;
+  background: none;
+  border: none;
+  border-radius: 13px;
+  color: var(--text2);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: left;
+  position: relative;
+  margin-bottom: 2px;
+}
+.nav-btn svg { width: 20px; height: 20px; flex-shrink: 0; transition: transform var(--transition); }
+.nav-btn:hover { background: var(--surface2); color: var(--text); }
+.nav-btn:hover svg { transform: scale(1.1); }
+.nav-btn.active {
+  background: linear-gradient(135deg, rgba(124,111,255,0.15), rgba(0,212,255,0.08));
+  color: var(--violet);
+  font-weight: 600;
+  border: 1px solid rgba(124,111,255,0.2);
+}
+.nav-btn .badge {
+  margin-left: auto;
+  background: var(--gradient);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.sb-compose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 13px;
+  background: var(--gradient);
+  border: none;
+  border-radius: 13px;
+  color: white;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-bottom: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.sb-compose::before { content:''; position:absolute; inset:0; background:white; opacity:0; transition:opacity var(--transition); }
+.sb-compose:hover::before { opacity:0.08; }
+.sb-compose:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(124,111,255,0.45); }
+.sb-compose svg { width: 18px; height: 18px; }
+
+.sb-spacer { flex: 1; }
+
+.sb-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.sb-user:hover { border-color: var(--border2); }
+.sb-user-info { flex: 1; min-width: 0; }
+.sb-user-name { font-size: 0.84rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-user-handle { font-size: 0.72rem; color: var(--text3); }
+
+.sb-menu-row { display: flex; gap: 6px; margin-top: 10px; }
+
+.sb-icon-btn {
+  flex: 1;
+  padding: 8px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition);
+  font-size: 0.75rem;
+  gap: 5px;
+}
+.sb-icon-btn svg { width: 15px; height: 15px; }
+.sb-icon-btn:hover { border-color: var(--border2); color: var(--text); }
+
+/* ═══ MAIN CONTENT ═════════════════════════════════════════════════ */
+.main {
+  margin-left: var(--sidebar-w);
+  margin-right: var(--right-w);
+  min-height: 100vh;
+  border-right: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+  flex: 1;
+}
+
+/* ═══ RIGHT PANEL ═══════════════════════════════════════════════════ */
+.right-panel {
+  position: fixed;
+  top: 0; right: 0;
+  width: var(--right-w);
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px 18px;
+  scrollbar-width: none;
+}
+
+/* ═══ VIEW SYSTEM ═══════════════════════════════════════════════════ */
+.view { display: none; animation: slideUp 0.3s ease; }
+.view.active { display: block; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.view-header {
+  position: sticky;
+  top: 0;
+  background: rgba(5,7,15,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 50;
+}
+
+[data-theme="light"] .view-header { background: rgba(240,242,255,0.85); }
+
+.view-title { font-size: 1.1rem; font-weight: 800; letter-spacing: -0.03em; }
+
+.view-actions { display: flex; gap: 8px; }
+
+.icon-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text2);
+  cursor: pointer;
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition);
+}
+.icon-btn svg { width: 16px; height: 16px; }
+.icon-btn:hover { border-color: var(--violet); color: var(--violet); }
+
+/* ═══ STORIES BAR ═══════════════════════════════════════════════════ */
+.stories-bar {
+  display: flex;
+  gap: 16px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.stories-bar::-webkit-scrollbar { display: none; }
+
+.story-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  transition: transform var(--transition);
+  flex-shrink: 0;
+}
+.story-item:hover { transform: translateY(-3px); }
+
+.story-ring {
+  width: 62px; height: 62px;
+  border-radius: 50%;
+  padding: 2px;
+  background: var(--gradient);
+  position: relative;
+}
+.story-ring.seen { background: var(--surface3); }
+.story-ring.add-story { background: var(--surface2); border: 2px dashed var(--border2); }
+
+.story-avatar {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 800;
+  border: 2px solid var(--surface);
+  color: white;
+  background: var(--surface2);
+  overflow: hidden;
+}
+.story-add-icon { font-size: 1.4rem; color: var(--violet); }
+
+.story-name {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text2);
+  white-space: nowrap;
+  max-width: 62px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+/* ═══ COMPOSE CARD ═══════════════════════════════════════════════════ */
+.compose-card {
+  display: flex;
+  gap: 14px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  transition: background var(--transition);
+}
+.compose-card:focus-within { background: var(--surface2); }
+
+.compose-right { flex: 1; }
+
+.compose-textarea {
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 0.95rem;
+  resize: none;
+  min-height: 44px;
+  line-height: 1.65;
+  font-family: 'Outfit', sans-serif;
+}
+.compose-textarea::placeholder { color: var(--text3); }
+
+.compose-divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+.compose-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.compose-tools-left { display: flex; gap: 4px; }
+
+.ctool {
+  background: none;
+  border: none;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: all var(--transition);
+}
+.ctool:hover { background: var(--surface3); color: var(--violet); }
+
+.char-count { font-size: 0.75rem; color: var(--text3); }
+.char-count.warn { color: var(--amber); }
+.char-count.danger { color: var(--red); }
+
+.post-btn {
+  padding: 9px 22px;
+  background: var(--gradient);
+  border: none;
+  border-radius: 22px;
+  color: white;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.post-btn:hover { transform: scale(1.04); box-shadow: 0 6px 20px rgba(124,111,255,0.45); }
+.post-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* Mood selector */
+.mood-selector {
+  display: none;
+  gap: 8px;
+  padding: 10px 0 0;
+  flex-wrap: wrap;
+}
+.mood-selector.open { display: flex; }
+.mood-tag {
+  padding: 5px 12px;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.mood-tag:hover, .mood-tag.selected { border-color: var(--violet); color: var(--violet); background: rgba(124,111,255,0.1); }
+
+/* ═══ POST CARD ═══════════════════════════════════════════════════ */
+.post-card {
+  border-bottom: 1px solid var(--border);
+  padding: 20px 24px;
+  transition: background var(--transition);
+  animation: fadeSlide 0.35s ease;
+  position: relative;
+}
+.post-card:hover { background: rgba(124,111,255,0.02); }
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+.post-top { display: flex; gap: 13px; align-items: flex-start; }
+.post-body { flex: 1; }
+
+.post-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.post-author-info { display: flex; flex-direction: column; gap: 1px; }
+.post-author-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: color var(--transition);
+}
+.post-author-name:hover { color: var(--violet); }
+.post-meta-row { display: flex; align-items: center; gap: 6px; }
+.post-handle { font-size: 0.75rem; color: var(--text3); }
+.post-dot { color: var(--text3); font-size: 0.6rem; }
+.post-time { font-size: 0.72rem; color: var(--text3); }
+
+.post-mood {
+  font-size: 0.7rem;
+  color: var(--violet);
+  background: rgba(124,111,255,0.1);
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.post-menu-btn {
+  background: none;
+  border: none;
+  color: var(--text3);
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: all var(--transition);
+  line-height: 1;
+  position: relative;
+}
+.post-menu-btn:hover { background: var(--surface2); color: var(--text); }
+
+.post-dropdown {
+  position: absolute;
+  right: 20px;
+  top: 52px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  z-index: 100;
+  overflow: hidden;
+  display: none;
+  min-width: 150px;
+}
+.post-dropdown.open { display: block; animation: dropIn 0.15s ease; }
+@keyframes dropIn { from { opacity:0; transform:scale(0.95) translateY(-4px); } to { opacity:1; transform:none; } }
+
+.dd-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  font-size: 0.84rem;
+  cursor: pointer;
+  transition: background var(--transition);
+  border: none;
+  background: none;
+  width: 100%;
+  color: var(--text);
+  text-align: left;
+}
+.dd-item:hover { background: var(--surface3); }
+.dd-item.danger { color: var(--red); }
+.dd-item.danger:hover { background: rgba(255,92,122,0.1); }
+
+.post-text {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text);
+  margin-bottom: 14px;
+  word-break: break-word;
+}
+.post-text.large { font-size: 1.25rem; line-height: 1.5; font-weight: 500; }
+
+/* Media embed in post */
+.post-media {
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  border: 1px solid var(--border);
+}
+.post-media img { width: 100%; display: block; max-height: 400px; object-fit: cover; }
+
+/* Link preview card */
+.post-link-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 14px;
+  cursor: pointer;
+  transition: border-color var(--transition);
+}
+.post-link-card:hover { border-color: var(--violet); }
+.link-card-body { padding: 12px 14px; }
+.link-card-domain { font-size: 0.72rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+.link-card-title { font-size: 0.88rem; font-weight: 600; }
+
+.post-actions {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 4px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: none;
+  border: none;
+  border-radius: 22px;
+  color: var(--text3);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+}
+.action-btn svg { width: 17px; height: 17px; }
+
+.action-btn.like-btn:hover { color: var(--red); background: rgba(255,92,122,0.1); }
+.action-btn.like-btn.liked { color: var(--red); }
+.action-btn.like-btn.liked svg { fill: var(--red); stroke: var(--red); }
+.action-btn.like-btn.liked { animation: likepop 0.35s ease; }
+
+@keyframes likepop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35) rotate(-5deg); }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.action-btn.comment-btn:hover { color: var(--cyan); background: rgba(0,212,255,0.1); }
+.action-btn.share-btn:hover { color: var(--green); background: rgba(0,229,160,0.1); }
+.action-btn.bookmark-btn:hover { color: var(--amber); background: rgba(255,179,71,0.1); }
+.action-btn.bookmark-btn.saved { color: var(--amber); }
+.action-btn.bookmark-btn.saved svg { fill: var(--amber); stroke: var(--amber); }
+
+/* Ripple */
+.action-btn::after {
+  content: '';
+  position: absolute;
+  width: 0; height: 0;
+  background: currentColor;
+  border-radius: 50%;
+  opacity: 0.3;
+  transition: width 0.3s, height 0.3s, opacity 0.3s;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+}
+.action-btn:active::after { width: 60px; height: 60px; opacity: 0; }
+
+/* Avatar */
+.avatar {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  color: white;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  background: var(--surface3);
+  text-transform: uppercase;
+}
+.avatar:hover { transform: scale(1.06); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+.av-sm { width: 32px; height: 32px; font-size: 0.7rem; border-radius: 50%; }
+.av-md { width: 42px; height: 42px; font-size: 0.85rem; }
+.av-lg { width: 56px; height: 56px; font-size: 1.1rem; }
+.av-xl { width: 80px; height: 80px; font-size: 1.6rem; }
+
+/* Online indicator */
+.av-wrap { position: relative; flex-shrink: 0; }
+.av-online { position: absolute; bottom: 1px; right: 1px; width: 11px; height: 11px; background: var(--green); border-radius: 50%; border: 2px solid var(--surface); }
+
+/* ═══ SEARCH BAR ═══════════════════════════════════════════════════ */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 62px;
+  background: rgba(5,7,15,0.88);
+  backdrop-filter: blur(20px);
+  z-index: 40;
+}
+[data-theme="light"] .search-bar { background: rgba(240,242,255,0.88); }
+
+.search-bar svg { width: 17px; height: 17px; color: var(--text3); flex-shrink: 0; }
+.search-bar input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: 'Outfit', sans-serif;
+}
+.search-bar input::placeholder { color: var(--text3); }
+
+/* ═══ PEOPLE GRID ══════════════════════════════════════════════════ */
+.people-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+  gap: 14px;
+  padding: 20px 20px;
+}
+
+.person-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px 18px;
+  text-align: center;
+  transition: all var(--transition);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.person-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gradient);
+  transform: scaleX(0);
+  transition: transform var(--transition);
+  transform-origin: left;
+}
+.person-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.35); border-color: var(--border2); }
+.person-card:hover::before { transform: scaleX(1); }
+
+.pc-name { font-size: 0.92rem; font-weight: 700; margin: 12px 0 2px; }
+.pc-handle { font-size: 0.75rem; color: var(--text3); margin-bottom: 8px; }
+.pc-bio { font-size: 0.75rem; color: var(--text2); line-height: 1.4; margin-bottom: 14px; min-height: 32px; }
+.pc-stats { display: flex; justify-content: center; gap: 18px; margin-bottom: 14px; }
+.pc-stat { text-align: center; }
+.pc-stat-n { font-size: 0.88rem; font-weight: 700; }
+.pc-stat-l { font-size: 0.65rem; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.follow-btn {
+  padding: 8px 20px;
+  border-radius: 22px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--text2);
+}
+.follow-btn:hover { border-color: var(--violet); color: var(--violet); background: rgba(124,111,255,0.1); }
+.follow-btn.following { background: var(--gradient); color: white; border-color: transparent; }
+.follow-btn.following:hover { opacity: 0.85; }
+
+/* ═══ PROFILE ══════════════════════════════════════════════════════ */
+.profile-banner {
+  height: 140px;
+  background: linear-gradient(135deg, rgba(124,111,255,0.4), rgba(0,212,255,0.3), rgba(255,79,163,0.3));
+  position: relative;
+  overflow: hidden;
+}
+.profile-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.profile-info-section {
+  padding: 0 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-avatar-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: -40px;
+  margin-bottom: 14px;
+}
+
+.profile-avatar-wrap { position: relative; }
+.profile-av {
+  width: 82px; height: 82px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 900;
+  border: 4px solid var(--bg);
+  color: white;
+}
+.profile-verified {
+  position: absolute;
+  bottom: 2px; right: 2px;
+  width: 20px; height: 20px;
+  background: var(--gradient);
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.6rem;
+  color: white;
+}
+
+.profile-actions-row { display: flex; gap: 8px; }
+
+.btn-follow-lg {
+  padding: 9px 22px;
+  background: var(--gradient);
+  border: none;
+  border-radius: 22px;
+  color: white;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.btn-follow-lg.following { background: var(--surface2); border: 1px solid var(--border2); color: var(--text2); }
+.btn-follow-lg:hover { opacity: 0.88; transform: translateY(-1px); }
+
+.btn-msg {
+  padding: 9px 20px;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 22px;
+  color: var(--text);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.btn-msg:hover { border-color: var(--violet); color: var(--violet); }
+
+.profile-name { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.03em; }
+.profile-handle { font-size: 0.84rem; color: var(--text3); margin: 2px 0 10px; }
+.profile-bio { font-size: 0.87rem; color: var(--text2); line-height: 1.55; margin-bottom: 14px; }
+.profile-joined { font-size: 0.75rem; color: var(--text3); display: flex; align-items: center; gap: 6px; }
+.profile-joined svg { width: 14px; height: 14px; }
+
+.profile-stats-row {
+  display: flex;
+  gap: 22px;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+.pstat { cursor: pointer; }
+.pstat-n { font-size: 1.05rem; font-weight: 800; }
+.pstat-l { font-size: 0.72rem; color: var(--text3); }
+
+/* Profile Tabs */
+.profile-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.ptab {
+  padding: 14px 16px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text3);
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-bottom: -1px;
+}
+.ptab:hover { color: var(--text); }
+.ptab.active { border-bottom-color: var(--violet); color: var(--violet); }
+
+/* ═══ NOTIFICATIONS ════════════════════════════════════════════════ */
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+  cursor: pointer;
+  animation: fadeSlide 0.3s ease;
+}
+.notif-item:hover { background: var(--surface2); }
+.notif-item.unread { background: rgba(124,111,255,0.04); }
+.notif-icon {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.notif-text { flex: 1; }
+.notif-text strong { font-weight: 700; }
+.notif-body { font-size: 0.84rem; color: var(--text2); line-height: 1.4; }
+.notif-time { font-size: 0.72rem; color: var(--text3); margin-top: 3px; }
+.notif-unread-dot {
+  width: 8px; height: 8px;
+  background: var(--violet);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+/* ═══ BOOKMARKS ════════════════════════════════════════════════════ */
+.bookmarks-empty {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--text3);
+}
+.bookmarks-empty .empty-icon { font-size: 3rem; margin-bottom: 14px; }
+.bookmarks-empty p { font-size: 0.88rem; }
+
+/* ═══ RIGHT PANEL CONTENT ══════════════════════════════════════════ */
+.rp-section { margin-bottom: 24px; }
+.rp-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text3);
+  margin-bottom: 12px;
+  padding: 0 2px;
+}
+
+/* Search in right panel */
+.rp-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  transition: border-color var(--transition);
+}
+.rp-search:focus-within { border-color: var(--violet); }
+.rp-search svg { width: 15px; height: 15px; color: var(--text3); flex-shrink: 0; }
+.rp-search input { flex: 1; background: none; border: none; outline: none; font-size: 0.84rem; font-family: 'Outfit', sans-serif; color: var(--text); }
+.rp-search input::placeholder { color: var(--text3); }
+
+.sug-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 8px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.sug-user:hover { background: var(--surface2); }
+.sug-info { flex: 1; min-width: 0; }
+.sug-name { font-size: 0.82rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sug-handle { font-size: 0.72rem; color: var(--text3); }
+.sug-follow {
+  padding: 5px 12px;
+  border: 1px solid var(--border2);
+  background: none;
+  border-radius: 16px;
+  color: var(--text2);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition);
+  flex-shrink: 0;
+  font-family: 'Outfit', sans-serif;
+}
+.sug-follow:hover { border-color: var(--violet); color: var(--violet); background: rgba(124,111,255,0.1); }
+.sug-follow.following { background: rgba(124,111,255,0.15); border-color: var(--violet); color: var(--violet); }
+
+.trend-list { display: flex; flex-direction: column; gap: 2px; }
+.trend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+.trend-item:hover { background: var(--surface2); }
+.trend-tag { font-size: 0.84rem; font-weight: 600; color: var(--violet); }
+.trend-count { font-size: 0.72rem; color: var(--text3); }
+
+.rp-footer { font-size: 0.68rem; color: var(--text3); line-height: 1.6; padding: 0 4px; }
+.rp-footer a { color: var(--text3); text-decoration: none; }
+.rp-footer a:hover { color: var(--violet); }
+
+/* Live stats widget */
+.live-widget {
+  background: linear-gradient(135deg, rgba(124,111,255,0.1), rgba(0,212,255,0.05));
+  border: 1px solid rgba(124,111,255,0.2);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+}
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--red);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.live-dot {
+  width: 6px; height: 6px;
+  background: var(--red);
+  border-radius: 50%;
+  animation: blink 1.2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+
+.live-stat { font-size: 1.4rem; font-weight: 900; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.live-label { font-size: 0.75rem; color: var(--text3); margin-top: 2px; }
+
+/* ═══ MODALS ═══════════════════════════════════════════════════════ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(10px);
+  z-index: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn2 0.2s ease;
+}
+@keyframes fadeIn2 { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-box {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 22px;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+  animation: modalPop 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  overflow: hidden;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+@keyframes modalPop { from { opacity:0; transform:scale(0.9) translateY(20px); } to { opacity:1; transform:none; } }
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.modal-title { font-size: 1rem; font-weight: 800; }
+.modal-close {
+  width: 32px; height: 32px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text2);
+  font-size: 0.9rem;
+  transition: all var(--transition);
+}
+.modal-close:hover { background: var(--surface3); color: var(--text); }
+
+/* Compose Modal */
+.compose-modal { width: 580px; max-width: 95vw; }
+.compose-modal-body { padding: 20px 24px; flex: 1; overflow-y: auto; }
+
+/* Comments Modal */
+.comments-modal { width: 560px; max-width: 95vw; }
+.comments-body { flex: 1; overflow-y: auto; }
+.comment-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+  animation: fadeSlide 0.2s ease;
+}
+.comment-content { flex: 1; }
+.comment-author { font-size: 0.84rem; font-weight: 700; margin-bottom: 3px; }
+.comment-text { font-size: 0.85rem; color: var(--text2); line-height: 1.5; }
+.comment-footer { display: flex; align-items: center; gap: 12px; margin-top: 5px; }
+.comment-time { font-size: 0.7rem; color: var(--text3); }
+.comment-like-btn {
+  background: none;
+  border: none;
+  font-size: 0.7rem;
+  color: var(--text3);
+  cursor: pointer;
+  transition: color var(--transition);
+  display: flex; align-items: center; gap: 4px;
+}
+.comment-like-btn:hover { color: var(--red); }
+
+.comment-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.comment-input-box {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 9px 9px 9px 16px;
+  transition: border-color var(--transition);
+}
+.comment-input-box:focus-within { border-color: var(--violet); }
+.comment-input-box input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 0.85rem;
+  font-family: 'Outfit', sans-serif;
+}
+.comment-input-box input::placeholder { color: var(--text3); }
+.comment-send-btn {
+  width: 32px; height: 32px;
+  background: var(--gradient);
+  border: none;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+.comment-send-btn svg { width: 14px; height: 14px; color: white; }
+.comment-send-btn:hover { transform: scale(1.1); opacity: 0.9; }
+
+/* User Profile Modal */
+.user-modal { width: 460px; max-width: 95vw; max-height: 85vh; }
+.user-modal-body { flex: 1; overflow-y: auto; }
+
+/* Story Viewer Modal */
+.story-modal { width: 420px; max-width: 95vw; }
+.story-viewer {
+  position: relative;
+  background: #000;
+  border-radius: 0 0 22px 22px;
+  overflow: hidden;
+  aspect-ratio: 9/16;
+  max-height: 500px;
+}
+.story-content {
+  width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+  padding: 40px;
+}
+.story-bg { position: absolute; inset: 0; }
+.story-user-row { position: absolute; top: 16px; left: 16px; display: flex; align-items: center; gap: 10px; color: white; z-index: 2; }
+.story-user-name { font-size: 0.85rem; font-weight: 700; }
+.story-text { position: relative; z-index: 2; font-size: 1.2rem; font-weight: 700; color: white; text-align: center; text-shadow: 0 2px 12px rgba(0,0,0,0.5); }
+.story-progress { position: absolute; top: 8px; left: 8px; right: 8px; display: flex; gap: 4px; z-index: 3; }
+.story-prog-bar { flex: 1; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px; overflow: hidden; }
+.story-prog-fill { height: 100%; background: white; border-radius: 2px; }
+
+/* Edit Profile Modal */
+.edit-modal { width: 480px; max-width: 95vw; }
+.edit-modal-body { padding: 24px; display: flex; flex-direction: column; gap: 16px; flex: 1; overflow-y: auto; }
+.edit-field { display: flex; flex-direction: column; gap: 6px; }
+.edit-label { font-size: 0.75rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; }
+.edit-input {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 0.88rem;
+  font-family: 'Outfit', sans-serif;
+  outline: none;
+  resize: none;
+  transition: border-color var(--transition);
+}
+.edit-input:focus { border-color: var(--violet); }
+.color-options { display: flex; gap: 10px; flex-wrap: wrap; }
+.color-opt {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform var(--transition);
+  border: 2px solid transparent;
+}
+.color-opt:hover { transform: scale(1.15); }
+.color-opt.selected { border-color: var(--text); }
+
+/* ═══ LOADING & EMPTY ══════════════════════════════════════════════ */
+.loading-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 20px;
+  color: var(--text3);
+  font-size: 0.84rem;
+}
+.spinner {
+  width: 36px; height: 36px;
+  border: 2px solid var(--border);
+  border-top-color: var(--violet);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-state {
+  text-align: center;
+  padding: 80px 24px;
+}
+.empty-icon { font-size: 3rem; margin-bottom: 14px; }
+.empty-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+.empty-sub { font-size: 0.84rem; color: var(--text3); line-height: 1.5; }
+
+/* ═══ TOAST / SNACKBAR ════════════════════════════════════════════ */
+#toast-container {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  padding: 12px 20px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: toastIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  white-space: nowrap;
+}
+.toast.removing { animation: toastOut 0.25s ease forwards; }
+@keyframes toastIn { from { opacity:0; transform:translateY(16px) scale(0.9); } to { opacity:1; transform:none; } }
+@keyframes toastOut { from { opacity:1; transform:none; } to { opacity:0; transform:translateY(8px) scale(0.95); } }
+.toast-icon { font-size: 1rem; }
+.toast.success { border-color: rgba(0,229,160,0.3); }
+.toast.error { border-color: rgba(255,92,122,0.3); }
+
+/* ═══ THEME TOGGLE ════════════════════════════════════════════════ */
+.theme-toggle {
+  width: 44px; height: 24px;
+  background: var(--surface3);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.theme-toggle.light { background: var(--gradient); }
+.theme-toggle::after {
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  background: white;
+  border-radius: 50%;
+  top: 2px; left: 2px;
+  transition: left var(--transition);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+.theme-toggle.light::after { left: calc(100% - 20px); }
+
+/* ═══ FLOATING ACTION BUTTON (mobile) ════════════════════════════ */
+.fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px; height: 56px;
+  background: var(--gradient);
+  border: none;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(124,111,255,0.5);
+  z-index: 300;
+  transition: all var(--transition);
+}
+.fab svg { width: 24px; height: 24px; color: white; }
+.fab:hover { transform: scale(1.1); }
+
+/* ═══ RESPONSIVE ══════════════════════════════════════════════════ */
+@media (max-width: 1150px) {
+  .right-panel { display: none; }
+  .main { margin-right: 0; }
+}
+@media (max-width: 800px) {
+  :root { --sidebar-w: 72px; }
+  .sb-brand .sb-name, .sb-brand .sb-tagline, .nav-btn span, .sb-compose span, .sb-user-info, .nav-section-label { display: none; }
+  .nav-btn { justify-content: center; }
+  .sb-compose { justify-content: center; }
+  .sb-user { justify-content: center; }
+  .sb-brand { justify-content: center; padding-bottom: 20px; }
+  .sb-menu-row { display: none; }
+  .fab { display: flex; }
+  .auth-left { display: none; }
+  .auth-right { width: 100%; }
+  .grid-2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     AUTH SCREEN
+══════════════════════════════════════════════════════════════════ -->
+<div id="auth-screen">
+  <div class="auth-left">
+    <div class="auth-left-bg">
+      <div class="aurora aurora-1"></div>
+      <div class="aurora aurora-2"></div>
+      <div class="aurora aurora-3"></div>
+    </div>
+    <div class="auth-hero">
+      <div class="brand-mark">
+        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22 4L40 14V30L22 40L4 30V14L22 4Z" stroke="url(#g1)" stroke-width="2"/>
+          <circle cx="22" cy="22" r="7" fill="url(#g1)"/>
+          <circle cx="22" cy="11" r="3" fill="url(#g2)" opacity="0.7"/>
+          <circle cx="22" cy="33" r="3" fill="url(#g2)" opacity="0.7"/>
+          <circle cx="11" cy="17" r="3" fill="url(#g2)" opacity="0.7"/>
+          <circle cx="33" cy="17" r="3" fill="url(#g2)" opacity="0.7"/>
+          <defs>
+            <linearGradient id="g1" x1="4" y1="4" x2="40" y2="40"><stop stop-color="#7C6FFF"/><stop offset="1" stop-color="#00D4FF"/></linearGradient>
+            <linearGradient id="g2" x1="4" y1="4" x2="40" y2="40"><stop stop-color="#FF4FA3"/><stop offset="1" stop-color="#7C6FFF"/></linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="auth-title">Nexus</div>
+      <p class="auth-subtitle">The social platform built for real connections.<br>Share your world. Discover theirs.</p>
+      <div class="feature-pills">
+        <div class="pill"><span>✦</span> Stories</div>
+        <div class="pill"><span>♥</span> Reactions</div>
+        <div class="pill"><span>◎</span> Profiles</div>
+        <div class="pill"><span>🔔</span> Notifications</div>
+        <div class="pill"><span>🔖</span> Bookmarks</div>
+        <div class="pill"><span>🌙</span> Dark Mode</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-right">
+    <div class="auth-form-title">Welcome back</div>
+    <div class="auth-form-sub">Sign in to continue your journey</div>
+
+    <div class="auth-tabs-row">
+      <button class="atab active" onclick="switchAuthTab('login')">Sign In</button>
+      <button class="atab" onclick="switchAuthTab('register')">Create Account</button>
+    </div>
+
+    <!-- LOGIN -->
+    <form class="aform active" id="login-form" onsubmit="handleLogin(event)">
+      <div>
+        <div class="field-label">Username or Email</div>
+        <div class="input-wrap">
+          <span class="input-icon">👤</span>
+          <input type="text" id="l-user" placeholder="Enter username or email" required autocomplete="username">
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Password</div>
+        <div class="input-wrap">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="l-pass" placeholder="Enter your password" required>
+        </div>
+      </div>
+      <button type="submit" class="btn-auth">Sign In to Nexus →</button>
+      <div class="demo-hint">
+        🎭 Demo accounts: <code>alex_nova</code> · <code>maya_chen</code> · <code>kai_storm</code><br>
+        Password for all: <code>demo123</code>
+      </div>
+    </form>
+
+    <!-- REGISTER -->
+    <form class="aform" id="reg-form" onsubmit="handleRegister(event)">
+      <div class="grid-2">
+        <div>
+          <div class="field-label">Full Name</div>
+          <div class="input-wrap"><span class="input-icon">✨</span><input type="text" id="r-name" placeholder="Your name" required></div>
+        </div>
+        <div>
+          <div class="field-label">Username</div>
+          <div class="input-wrap"><span class="input-icon">@</span><input type="text" id="r-user" placeholder="unique_handle" required></div>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Email</div>
+        <div class="input-wrap"><span class="input-icon">✉</span><input type="email" id="r-email" placeholder="you@example.com" required></div>
+      </div>
+      <div>
+        <div class="field-label">Password</div>
+        <div class="input-wrap"><span class="input-icon">🔒</span><input type="password" id="r-pass" placeholder="Secure password" required></div>
+      </div>
+      <div>
+        <div class="field-label">Bio (optional)</div>
+        <div class="input-wrap"><span class="input-icon">📝</span><input type="text" id="r-bio" placeholder="Tell your story..."></div>
+      </div>
+      <button type="submit" class="btn-auth">Join Nexus →</button>
+    </form>
+
+    <div id="auth-error" class="auth-error"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════════════════════════════ -->
+<div id="app" class="hidden">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo">⬡</div>
+      <div>
+        <div class="sb-name">Nexus</div>
+        <div class="sb-tagline">CONNECT BEYOND</div>
+      </div>
+    </div>
+
+    <div class="nav-section-label">Main</div>
+    <button class="nav-btn active" data-view="feed" onclick="showView('feed',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home Feed
+    </button>
+    <button class="nav-btn" data-view="explore" onclick="showView('explore',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Explore
+    </button>
+    <button class="nav-btn" data-view="people" onclick="showView('people',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+      People
+    </button>
+    <button class="nav-btn" data-view="notifications" onclick="showView('notifications',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+      Notifications
+      <span class="badge" id="notif-badge">3</span>
+    </button>
+    <button class="nav-btn" data-view="bookmarks" onclick="showView('bookmarks',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+      Bookmarks
+    </button>
+
+    <div class="nav-section-label">Account</div>
+    <button class="nav-btn" data-view="profile" onclick="showView('profile',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My Profile
+    </button>
+
+    <button class="sb-compose" onclick="openComposeModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+      New Post
+    </button>
+
+    <div class="sb-spacer"></div>
+
+    <div class="sb-menu-row">
+      <button class="sb-icon-btn" onclick="toggleTheme()" title="Toggle theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        Theme
+      </button>
+      <button class="sb-icon-btn" onclick="logout()" title="Logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Out
+      </button>
+    </div>
+
+    <div class="sb-user" onclick="showView('profile',null)">
+      <div class="avatar av-md" id="sb-avatar"></div>
+      <div class="sb-user-info">
+        <div class="sb-user-name" id="sb-name"></div>
+        <div class="sb-user-handle" id="sb-handle"></div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- FEED -->
+    <section id="view-feed" class="view active">
+      <div class="view-header">
+        <div class="view-title">Home</div>
+        <div class="view-actions">
+          <button class="icon-btn" onclick="loadFeed()" title="Refresh">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- STORIES -->
+      <div class="stories-bar" id="stories-bar">
+        <div class="story-item" onclick="openStoryCompose()">
+          <div class="story-ring add-story">
+            <div class="story-avatar"><span class="story-add-icon">+</span></div>
+          </div>
+          <div class="story-name">Your Story</div>
+        </div>
+      </div>
+
+      <!-- COMPOSE -->
+      <div class="compose-card">
+        <div class="av-wrap">
+          <div class="avatar av-md" id="compose-av-inline"></div>
+          <div class="av-online"></div>
+        </div>
+        <div class="compose-right">
+          <textarea class="compose-textarea" id="compose-inline-text" placeholder="What's on your mind today?" oninput="onComposeInput(this,'inline-count')" rows="2"></textarea>
+          <div id="mood-inline" class="mood-selector">
+            <div class="mood-tag" onclick="selectMood(this,'inline')">😊 Happy</div>
+            <div class="mood-tag" onclick="selectMood(this,'inline')">🎉 Excited</div>
+            <div class="mood-tag" onclick="selectMood(this,'inline')">💭 Thoughtful</div>
+            <div class="mood-tag" onclick="selectMood(this,'inline')">😤 Frustrated</div>
+            <div class="mood-tag" onclick="selectMood(this,'inline')">🌟 Inspired</div>
+            <div class="mood-tag" onclick="selectMood(this,'inline')">😴 Tired</div>
+          </div>
+          <div class="compose-divider"></div>
+          <div class="compose-toolbar">
+            <div class="compose-tools-left">
+              <button class="ctool" onclick="toggleMood('inline')" title="Mood">😊</button>
+              <button class="ctool" title="Photo">📷</button>
+              <button class="ctool" title="GIF">GIF</button>
+              <span class="char-count" id="inline-count">280</span>
+            </div>
+            <button class="post-btn" onclick="createPost('inline')">Post</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="feed-container">
+        <div class="loading-center"><div class="spinner"></div><span>Loading feed…</span></div>
+      </div>
+    </section>
+
+    <!-- EXPLORE -->
+    <section id="view-explore" class="view">
+      <div class="view-header"><div class="view-title">Explore</div></div>
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search posts, people, topics…" oninput="searchAll(this.value)" id="explore-search">
+      </div>
+      <div id="explore-container">
+        <div class="loading-center"><div class="spinner"></div><span>Loading posts…</span></div>
+      </div>
+    </section>
+
+    <!-- PEOPLE -->
+    <section id="view-people" class="view">
+      <div class="view-header"><div class="view-title">Discover People</div></div>
+      <div class="search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" placeholder="Search by name or username…" oninput="loadPeople(this.value)" id="people-search">
+      </div>
+      <div class="people-grid" id="people-grid"></div>
+    </section>
+
+    <!-- NOTIFICATIONS -->
+    <section id="view-notifications" class="view">
+      <div class="view-header">
+        <div class="view-title">Notifications</div>
+        <button class="icon-btn" onclick="clearNotifs()" title="Mark all read">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        </button>
+      </div>
+      <div id="notifs-container"></div>
+    </section>
+
+    <!-- BOOKMARKS -->
+    <section id="view-bookmarks" class="view">
+      <div class="view-header"><div class="view-title">Saved Posts</div></div>
+      <div id="bookmarks-container"></div>
+    </section>
+
+    <!-- PROFILE -->
+    <section id="view-profile" class="view">
+      <div id="profile-container"></div>
+    </section>
+
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <aside class="right-panel">
+    <div class="live-widget">
+      <div class="live-badge"><div class="live-dot"></div> LIVE NOW</div>
+      <div class="live-stat" id="live-count">—</div>
+      <div class="live-label">posts shared today on Nexus</div>
+    </div>
+
+    <div class="rp-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Quick search…" oninput="searchAll(this.value)">
+    </div>
+
+    <div class="rp-section">
+      <div class="rp-title">Who to Follow</div>
+      <div id="rp-suggested"></div>
+    </div>
+
+    <div class="rp-section">
+      <div class="rp-title">Trending Topics</div>
+      <div class="trend-list">
+        <div class="trend-item"><span class="trend-tag">#design</span><span class="trend-count">2.4K posts</span></div>
+        <div class="trend-item"><span class="trend-tag">#photography</span><span class="trend-count">1.8K posts</span></div>
+        <div class="trend-item"><span class="trend-tag">#coding</span><span class="trend-count">1.5K posts</span></div>
+        <div class="trend-item"><span class="trend-tag">#travel</span><span class="trend-count">980 posts</span></div>
+        <div class="trend-item"><span class="trend-tag">#mindfulness</span><span class="trend-count">670 posts</span></div>
+        <div class="trend-item"><span class="trend-tag">#nexus</span><span class="trend-count">440 posts</span></div>
+      </div>
+    </div>
+
+    <div class="rp-section">
+      <div class="rp-footer">
+        <a href="#">Terms</a> · <a href="#">Privacy</a> · <a href="#">About</a><br>
+        © 2025 Nexus Social. Made with ♥
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+<!-- MODALS ═════════════════════════════════════════════════════════ -->
+
+<!-- Compose Modal -->
+<div id="compose-modal" class="modal-backdrop hidden">
+  <div class="modal-box compose-modal">
+    <div class="modal-head">
+      <div class="modal-title">Create Post</div>
+      <button class="modal-close" onclick="closeModal('compose-modal')">✕</button>
+    </div>
+    <div class="compose-modal-body">
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;">
+        <div class="av-wrap">
+          <div class="avatar av-md" id="modal-compose-av"></div>
+          <div class="av-online"></div>
+        </div>
+        <div>
+          <div style="font-size:0.9rem;font-weight:700;" id="modal-compose-name"></div>
+          <div style="font-size:0.72rem;color:var(--text3);">Public · Everyone can see this</div>
+        </div>
+      </div>
+      <textarea class="compose-textarea" id="compose-modal-text" placeholder="Share something amazing…" rows="6" oninput="onComposeInput(this,'modal-count')" style="font-size:1.05rem;"></textarea>
+      <div id="mood-modal" class="mood-selector" style="margin-top:12px;">
+        <div class="mood-tag" onclick="selectMood(this,'modal')">😊 Happy</div>
+        <div class="mood-tag" onclick="selectMood(this,'modal')">🎉 Excited</div>
+        <div class="mood-tag" onclick="selectMood(this,'modal')">💭 Thoughtful</div>
+        <div class="mood-tag" onclick="selectMood(this,'modal')">😤 Frustrated</div>
+        <div class="mood-tag" onclick="selectMood(this,'modal')">🌟 Inspired</div>
+        <div class="mood-tag" onclick="selectMood(this,'modal')">😴 Tired</div>
+      </div>
+    </div>
+    <div class="modal-head" style="border-top:1px solid var(--border);border-bottom:none;justify-content:space-between;">
+      <div style="display:flex;gap:6px;">
+        <button class="ctool" onclick="toggleMood('modal')">😊 Mood</button>
+        <button class="ctool">📷 Photo</button>
+        <button class="ctool">🔗 Link</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span class="char-count" id="modal-count">280</span>
+        <button class="post-btn" onclick="createPost('modal')">Post →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Comments Modal -->
+<div id="comments-modal" class="modal-backdrop hidden">
+  <div class="modal-box comments-modal">
+    <div class="modal-head">
+      <div class="modal-title">Comments</div>
+      <button class="modal-close" onclick="closeModal('comments-modal')">✕</button>
+    </div>
+    <div class="comments-body" id="comments-list"></div>
+    <div class="comment-input-row">
+      <div class="av-wrap">
+        <div class="avatar av-sm" id="comment-input-av"></div>
+        <div class="av-online"></div>
+      </div>
+      <div class="comment-input-box">
+        <input type="text" id="comment-input" placeholder="Add a comment…" onkeydown="if(event.key==='Enter')submitComment()">
+        <button class="comment-send-btn" onclick="submitComment()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- User Profile Modal -->
+<div id="user-modal" class="modal-backdrop hidden">
+  <div class="modal-box user-modal">
+    <button class="modal-close" style="position:absolute;top:14px;right:14px;z-index:2;" onclick="closeModal('user-modal')">✕</button>
+    <div class="user-modal-body" id="user-modal-content"></div>
+  </div>
+</div>
+
+<!-- Story Viewer Modal -->
+<div id="story-modal" class="modal-backdrop hidden">
+  <div class="modal-box story-modal">
+    <button class="modal-close" style="position:absolute;top:14px;right:14px;z-index:10;" onclick="closeModal('story-modal')">✕</button>
+    <div class="story-viewer" id="story-viewer"></div>
+  </div>
+</div>
+
+<!-- Edit Profile Modal -->
+<div id="edit-modal" class="modal-backdrop hidden">
+  <div class="modal-box edit-modal">
+    <div class="modal-head">
+      <div class="modal-title">Edit Profile</div>
+      <button class="modal-close" onclick="closeModal('edit-modal')">✕</button>
+    </div>
+    <div class="edit-modal-body">
+      <div class="edit-field">
+        <div class="edit-label">Full Name</div>
+        <input class="edit-input" type="text" id="edit-name" placeholder="Your full name">
+      </div>
+      <div class="edit-field">
+        <div class="edit-label">Bio</div>
+        <textarea class="edit-input" id="edit-bio" rows="3" placeholder="Tell the world about yourself…"></textarea>
+      </div>
+      <div class="edit-field">
+        <div class="edit-label">Avatar Color</div>
+        <div class="color-options" id="color-options"></div>
+      </div>
+    </div>
+    <div class="modal-head" style="border-top:1px solid var(--border);border-bottom:none;">
+      <button class="post-btn" onclick="saveProfile()" style="width:100%;">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<!-- Mobile FAB -->
+<button class="fab" onclick="openComposeModal()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+</button>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     JAVASCRIPT — Full App Logic
+══════════════════════════════════════════════════════════════════ -->
+<script>
+/* ═══ STATE ═══════════════════════════════════════════════════════ */
+let currentUser = null;
+let token = null;
+let currentPostId = null;
+let currentMoodInline = null;
+let currentMoodModal = null;
+let activeView = 'feed';
+let bookmarks = JSON.parse(localStorage.getItem('nx_bookmarks') || '[]');
+let theme = localStorage.getItem('nx_theme') || 'dark';
+
+const COLORS = ['#7C6FFF','#00D4FF','#FF4FA3','#00E5A0','#FFB347','#FF5C7A','#A855F7','#06B6D4','#F59E0B','#10B981'];
+
+/* ═══ DEMO DATA ════════════════════════════════════════════════════ */
+const DEMO_USERS = [
+  { id:'u1', username:'alex_nova', fullName:'Alex Nova', bio:'Product designer & dreamer ✨ • Creating digital experiences that matter', email:'alex@demo.com', color:'#7C6FFF', password:'demo123', followers:['u2','u3'], following:['u2'], postsCount:3, followersCount:2, followingCount:1 },
+  { id:'u2', username:'maya_chen', fullName:'Maya Chen', bio:'Photographer | Explorer 📸 • Finding beauty in everyday moments', email:'maya@demo.com', color:'#00D4FF', password:'demo123', followers:['u1'], following:['u1','u3'], postsCount:2, followersCount:1, followingCount:2 },
+  { id:'u3', username:'kai_storm', fullName:'Kai Storm', bio:'Full-stack dev ☕ • Open source contributor • Coffee connoisseur', email:'kai@demo.com', color:'#FF4FA3', password:'demo123', followers:['u2'], following:[], postsCount:2, followersCount:1, followingCount:0 },
+  { id:'u4', username:'zara_luz', fullName:'Zara Luz', bio:'Artist & illustrator 🎨 • Color theory obsessed', email:'zara@demo.com', color:'#00E5A0', password:'demo123', followers:[], following:[], postsCount:1, followersCount:0, followingCount:0 },
+  { id:'u5', username:'leo_vance', fullName:'Leo Vance', bio:'Entrepreneur | Angel investor 🚀 • Building the future', email:'leo@demo.com', color:'#FFB347', password:'demo123', followers:[], following:[], postsCount:1, followersCount:0, followingCount:0 },
+];
+
+let DEMO_POSTS = [
+  { id:'p1', authorId:'u1', content:"Just launched my new design portfolio after 6 months of work! Every pixel crafted with intention. The journey from blank canvas to live site taught me more than any course ever could. Drop a comment if you want the link! 🎨", mood:'🌟 Inspired', likes:['u2','u3'], comments:['c1','c2'], createdAt: new Date(Date.now()-3600000*2).toISOString() },
+  { id:'p2', authorId:'u2', content:"Golden hour at the coast today. Spent 4 hours chasing this shot. Sometimes patience is the only technique that matters. 📷✨", mood:'😊 Happy', likes:['u1','u3','u4'], comments:['c3'], createdAt: new Date(Date.now()-3600000*5).toISOString() },
+  { id:'p3', authorId:'u3', content:"Just shipped a feature that cut our API response time by 67%! The secret sauce? Redis caching + database query optimization. Sometimes the biggest wins come from the simplest ideas. Ask me anything! ⚡", mood:'🎉 Excited', likes:['u1','u2'], comments:[], createdAt: new Date(Date.now()-3600000*8).toISOString() },
+  { id:'p4', authorId:'u1', content:"Design principle I keep coming back to: Constraints aren't limitations — they're creative fuel. The best solutions often emerge from the tightest boundaries. What constraint has pushed you to do better work?", mood:'💭 Thoughtful', likes:['u3'], comments:['c4'], createdAt: new Date(Date.now()-3600000*24).toISOString() },
+  { id:'p5', authorId:'u4', content:"New illustration series dropping this week! Each piece explores how color temperature affects emotional response. Teaser → warm amber vs cool indigo. Which pulls you in more? 🎨", mood:'🌟 Inspired', likes:['u1','u2','u5'], comments:[], createdAt: new Date(Date.now()-3600000*30).toISOString() },
+  { id:'p6', authorId:'u2', content:"Street photography is 90% patience, 9% timing, 1% gear. Spent the morning in the old quarter watching light play on ancient walls. The city tells stories if you slow down enough to listen. 🌆", mood:'😊 Happy', likes:['u1'], comments:[], createdAt: new Date(Date.now()-3600000*36).toISOString() },
+  { id:'p7', authorId:'u5', content:"Year 3 of building in public: Revenue crossed $50K MRR last month. Zero funding. Just customer obsession and relentless iteration. The playbook nobody tells you: talk to users every single day. 🚀", mood:'🎉 Excited', likes:['u1','u2','u3','u4'], comments:['c5'], createdAt: new Date(Date.now()-3600000*48).toISOString() },
+  { id:'p8', authorId:'u3', content:"Hot take: Most apps are 3× slower than they need to be. Not because of complex problems — because of lazy architecture decisions made under time pressure. Tech debt isn't a feature, it's a tax.", mood:'😤 Frustrated', likes:['u2'], comments:[], createdAt: new Date(Date.now()-3600000*52).toISOString() },
+];
+
+let DEMO_COMMENTS = [
+  { id:'c1', postId:'p1', authorId:'u2', content:"This is incredible work Alex! The case studies are so well documented 🔥", likes:['u1'], createdAt: new Date(Date.now()-3600000*1).toISOString() },
+  { id:'c2', postId:'p1', authorId:'u3', content:"The micro-interactions on the homepage are chef's kiss. Clean, purposeful, beautiful.", likes:[], createdAt: new Date(Date.now()-3600000*0.5).toISOString() },
+  { id:'c3', postId:'p2', authorId:'u1', content:"Maya this is unreal! The way the light hits the water 😍 Print quality?", likes:['u2'], createdAt: new Date(Date.now()-3600000*4).toISOString() },
+  { id:'c4', postId:'p4', authorId:'u2', content:"The 140 character limit on Twitter is honestly my favorite constraint. Forces you to be precise.", likes:[], createdAt: new Date(Date.now()-3600000*20).toISOString() },
+  { id:'c5', postId:'p7', authorId:'u3', content:"Would love a thread on your early days — how did you get your first 100 users?", likes:['u5'], createdAt: new Date(Date.now()-3600000*47).toISOString() },
+];
+
+let DEMO_STORIES = [
+  { id:'s1', authorId:'u2', text:'Golden hour 🌅', bg:'linear-gradient(135deg,#FF6B6B,#FFE66D)', emoji:'📷', createdAt: new Date().toISOString() },
+  { id:'s2', authorId:'u3', text:'Shipping features 🚀', bg:'linear-gradient(135deg,#667eea,#764ba2)', emoji:'⚡', createdAt: new Date().toISOString() },
+  { id:'s3', authorId:'u4', text:'New art today! 🎨', bg:'linear-gradient(135deg,#00E5A0,#00D4FF)', emoji:'🎨', createdAt: new Date().toISOString() },
+  { id:'s4', authorId:'u5', text:'Building the future 🔥', bg:'linear-gradient(135deg,#FF4FA3,#7C6FFF)', emoji:'🚀', createdAt: new Date().toISOString() },
+];
+
+let DEMO_NOTIFICATIONS = [
+  { id:'n1', type:'like', actorId:'u2', postId:'p1', read:false, createdAt: new Date(Date.now()-1800000).toISOString() },
+  { id:'n2', type:'comment', actorId:'u3', postId:'p1', commentId:'c2', read:false, createdAt: new Date(Date.now()-3000000).toISOString() },
+  { id:'n3', type:'follow', actorId:'u4', read:false, createdAt: new Date(Date.now()-7200000).toISOString() },
+  { id:'n4', type:'like', actorId:'u5', postId:'p4', read:true, createdAt: new Date(Date.now()-86400000).toISOString() },
+];
+
+/* ═══ HELPERS ═════════════════════════════════════════════════════ */
+const $  = id => document.getElementById(id);
+const el = (tag, cls='', html='') => { const e=document.createElement(tag); if(cls)e.className=cls; if(html)e.innerHTML=html; return e; };
+
+function getUser(id) { return DEMO_USERS.find(u=>u.id===id); }
+function getPost(id) { return DEMO_POSTS.find(p=>p.id===id); }
+
+function timeAgo(iso) {
+  const s = Math.floor((Date.now()-new Date(iso))/1000);
+  if(s<60) return 'just now';
+  if(s<3600) return `${Math.floor(s/60)}m`;
+  if(s<86400) return `${Math.floor(s/3600)}h`;
+  return `${Math.floor(s/86400)}d`;
+}
+
+function initials(name) { return name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+
+function avatarHTML(user, size='av-md') {
+  return `<div class="avatar ${size}" style="background:${user.color}">${initials(user.fullName)}</div>`;
+}
+
+function genId() { return 'x' + Date.now() + Math.random().toString(36).slice(2,7); }
+
+function toast(msg, type='info') {
+  const tc = $('toast-container');
+  const t = el('div', `toast ${type}`);
+  const icons = { success:'✅', error:'❌', info:'💬', like:'❤️', follow:'👋', save:'🔖' };
+  t.innerHTML = `<span class="toast-icon">${icons[type]||'💬'}</span>${msg}`;
+  tc.appendChild(t);
+  setTimeout(() => {
+    t.classList.add('removing');
+    setTimeout(() => t.remove(), 300);
+  }, 3000);
+}
+
+/* ═══ AUTH ════════════════════════════════════════════════════════ */
+function switchAuthTab(tab) {
+  document.querySelectorAll('.atab').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase().includes(tab==='login'?'sign':'create')));
+  document.querySelectorAll('.aform').forEach(f => f.classList.remove('active'));
+  $(tab==='login'?'login-form':'reg-form').classList.add('active');
+  $('auth-error').textContent = '';
+}
+
+function handleLogin(e) {
+  e.preventDefault();
+  const val = $('l-user').value.trim().toLowerCase();
+  const pass = $('l-pass').value;
+  const user = DEMO_USERS.find(u => (u.username===val||u.email===val) && u.password===pass);
+  if (!user) { $('auth-error').textContent = '✕  Invalid credentials. Try demo123'; return; }
+  loginSuccess(user);
+}
+
+function handleRegister(e) {
+  e.preventDefault();
+  const username = $('r-user').value.trim().toLowerCase();
+  if (DEMO_USERS.find(u=>u.username===username)) { $('auth-error').textContent='✕  Username taken'; return; }
+  const user = {
+    id: genId(), username, fullName: $('r-name').value.trim(),
+    email: $('r-email').value.trim(), bio: $('r-bio').value.trim()||'New to Nexus! 🚀',
+    color: COLORS[Math.floor(Math.random()*COLORS.length)],
+    password: $('r-pass').value,
+    followers: [], following: [], postsCount: 0, followersCount: 0, followingCount: 0
+  };
+  DEMO_USERS.push(user);
+  loginSuccess(user);
+}
+
+function loginSuccess(user) {
+  currentUser = user;
+  $('auth-screen').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  renderSidebar();
+  loadFeed();
+  loadStories();
+  loadSuggested();
+  renderNotifications();
+  updateLiveCount();
+  applyTheme(theme);
+  toast(`Welcome back, ${user.fullName.split(' ')[0]}! 👋`, 'success');
+}
+
+function logout() {
+  currentUser = null;
+  $('app').classList.add('hidden');
+  $('auth-screen').classList.remove('hidden');
+  $('l-user').value=''; $('l-pass').value='';
+}
+
+/* ═══ SIDEBAR ═════════════════════════════════════════════════════ */
+function renderSidebar() {
+  const av = $('sb-avatar');
+  av.style.background = currentUser.color;
+  av.textContent = initials(currentUser.fullName);
+  $('sb-name').textContent = currentUser.fullName;
+  $('sb-handle').textContent = '@' + currentUser.username;
+  // compose avatars
+  const cav = $('compose-av-inline');
+  cav.style.background = currentUser.color;
+  cav.textContent = initials(currentUser.fullName);
+  const mav = $('modal-compose-av');
+  mav.style.background = currentUser.color;
+  mav.textContent = initials(currentUser.fullName);
+  $('modal-compose-name').textContent = currentUser.fullName;
+  const comment_av = $('comment-input-av');
+  comment_av.style.background = currentUser.color;
+  comment_av.textContent = initials(currentUser.fullName);
+}
+
+/* ═══ VIEW NAVIGATION ═════════════════════════════════════════════ */
+function showView(name, btn) {
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  $(`view-${name}`)?.classList.add('active');
+  if(btn) btn.classList.add('active');
+  else {
+    const matching = document.querySelector(`[data-view="${name}"]`);
+    if(matching) matching.classList.add('active');
+  }
+  activeView = name;
+  if(name==='feed') loadFeed();
+  else if(name==='explore') loadExplore();
+  else if(name==='people') loadPeople('');
+  else if(name==='notifications') renderNotifications();
+  else if(name==='bookmarks') renderBookmarks();
+  else if(name==='profile') renderMyProfile();
+}
+
+/* ═══ THEME ═══════════════════════════════════════════════════════ */
+function toggleTheme() {
+  theme = theme==='dark'?'light':'dark';
+  localStorage.setItem('nx_theme', theme);
+  applyTheme(theme);
+  toast(theme==='light'?'☀️ Light mode':'🌙 Dark mode');
+}
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+}
+
+/* ═══ STORIES ═════════════════════════════════════════════════════ */
+function loadStories() {
+  const bar = $('stories-bar');
+  const existing = bar.querySelectorAll('.story-item:not(:first-child)');
+  existing.forEach(e=>e.remove());
+  DEMO_STORIES.forEach(s => {
+    const u = getUser(s.authorId);
+    if(!u) return;
+    const item = el('div','story-item');
+    item.onclick = () => openStoryViewer(s);
+    item.innerHTML = `
+      <div class="story-ring">
+        <div class="story-avatar" style="background:${u.color};color:white;font-size:1.3rem;">${s.emoji}</div>
+      </div>
+      <div class="story-name">${u.fullName.split(' ')[0]}</div>`;
+    bar.appendChild(item);
+  });
+}
+
+function openStoryViewer(s) {
+  const u = getUser(s.authorId);
+  $('story-viewer').innerHTML = `
+    <div class="story-bg" style="background:${s.bg}"></div>
+    <div class="story-progress"><div class="story-prog-bar"><div class="story-prog-fill" style="animation:storyProgress 4s linear forwards"></div></div></div>
+    <div class="story-user-row">
+      <div class="avatar av-sm" style="background:${u.color}">${initials(u.fullName)}</div>
+      <span class="story-user-name">${u.fullName}</span>
+      <span style="font-size:0.72rem;color:rgba(255,255,255,0.6)">${timeAgo(s.createdAt)}</span>
+    </div>
+    <div class="story-content">
+      <div style="font-size:4rem;">${s.emoji}</div>
+      <div class="story-text">${s.text}</div>
+    </div>`;
+  // inject story progress keyframe
+  const style = document.createElement('style');
+  style.textContent = '@keyframes storyProgress { from{width:0} to{width:100%} }';
+  document.head.appendChild(style);
+  openModal('story-modal');
+  setTimeout(()=>closeModal('story-modal'), 4200);
+}
+
+function openStoryCompose() {
+  const texts = ['Just had the best coffee ☕','Working on something big 🔥','Beautiful day today 🌤️','Code is poetry 💻','Grateful for everything 🙏'];
+  const bgs = ['linear-gradient(135deg,#7C6FFF,#00D4FF)','linear-gradient(135deg,#FF4FA3,#7C6FFF)','linear-gradient(135deg,#00E5A0,#00D4FF)','linear-gradient(135deg,#FFB347,#FF5C7A)','linear-gradient(135deg,#A855F7,#06B6D4)'];
+  const emojis = ['☕','🔥','🌤️','💻','🙏'];
+  const i = Math.floor(Math.random()*texts.length);
+  const story = { id:genId(), authorId:currentUser.id, text:texts[i], bg:bgs[i], emoji:emojis[i], createdAt:new Date().toISOString() };
+  DEMO_STORIES.unshift(story);
+  loadStories();
+  toast('Story posted! 📸', 'success');
+}
+
+/* ═══ POSTS ═══════════════════════════════════════════════════════ */
+function renderPost(post) {
+  const author = getUser(post.authorId);
+  if(!author) return null;
+  const isLiked = post.likes.includes(currentUser.id);
+  const isSaved = bookmarks.includes(post.id);
+  const isOwn = post.authorId === currentUser.id;
+  const commentCount = DEMO_COMMENTS.filter(c=>c.postId===post.id).length;
+  const isLong = post.content.length < 80;
+
+  const card = el('div','post-card');
+  card.dataset.postId = post.id;
+  card.innerHTML = `
+    <div class="post-top">
+      <div class="av-wrap">
+        <div class="avatar av-md" style="background:${author.color}" onclick="openUserModal('${author.id}')">${initials(author.fullName)}</div>
+        ${Math.random()>0.5?'<div class="av-online"></div>':''}
+      </div>
+      <div class="post-body">
+        <div class="post-head">
+          <div class="post-author-info">
+            <span class="post-author-name" onclick="openUserModal('${author.id}')">${author.fullName}</span>
+            <div class="post-meta-row">
+              <span class="post-handle">@${author.username}</span>
+              <span class="post-dot">•</span>
+              <span class="post-time">${timeAgo(post.createdAt)}</span>
+            </div>
+            ${post.mood ? `<span class="post-mood">${post.mood}</span>` : ''}
+          </div>
+          <div style="position:relative;">
+            <button class="post-menu-btn" onclick="toggleDropdown('dd-${post.id}')">···</button>
+            <div class="post-dropdown" id="dd-${post.id}">
+              ${isOwn ? `<button class="dd-item danger" onclick="deletePost('${post.id}')">🗑 Delete post</button>` : ''}
+              <button class="dd-item" onclick="bookmarkPost('${post.id}')">🔖 ${isSaved?'Unsave':'Save'} post</button>
+              <button class="dd-item" onclick="sharePost('${post.id}')">🔗 Copy link</button>
+              ${!isOwn ? `<button class="dd-item">🚫 Report post</button>` : ''}
+            </div>
+          </div>
+        </div>
+        <div class="post-text ${isLong?'large':''}">${formatContent(post.content)}</div>
+        <div class="post-actions">
+          <button class="action-btn like-btn ${isLiked?'liked':''}" onclick="likePost('${post.id}',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+            <span class="like-count">${post.likes.length}</span>
+          </button>
+          <button class="action-btn comment-btn" onclick="openComments('${post.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <span>${commentCount}</span>
+          </button>
+          <button class="action-btn share-btn" onclick="sharePost('${post.id}')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share
+          </button>
+          <button class="action-btn bookmark-btn ${isSaved?'saved':''}" onclick="bookmarkPost('${post.id}',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>`;
+  return card;
+}
+
+function formatContent(text) {
+  return text
+    .replace(/#(\w+)/g, '<span style="color:var(--violet);cursor:pointer;">#$1</span>')
+    .replace(/@(\w+)/g, '<span style="color:var(--cyan);cursor:pointer;">@$1</span>');
+}
+
+function loadFeed() {
+  const c = $('feed-container');
+  c.innerHTML = '<div class="loading-center"><div class="spinner"></div><span>Loading your feed…</span></div>';
+  setTimeout(() => {
+    const following = [...(currentUser.following||[]), currentUser.id];
+    const posts = DEMO_POSTS.filter(p=>following.includes(p.authorId)).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+    c.innerHTML = '';
+    if(!posts.length) {
+      c.innerHTML = `<div class="empty-state"><div class="empty-icon">🌐</div><div class="empty-title">Your feed is empty</div><div class="empty-sub">Follow people to see their posts here,<br>or check out <strong>Explore</strong> to discover content.</div></div>`;
+      return;
+    }
+    posts.forEach(p => { const el = renderPost(p); if(el) c.appendChild(el); });
+  }, 600);
+}
+
+function loadExplore() {
+  const c = $('explore-container');
+  c.innerHTML = '<div class="loading-center"><div class="spinner"></div><span>Loading posts…</span></div>';
+  setTimeout(() => {
+    const posts = [...DEMO_POSTS].sort((a,b)=>b.likes.length-a.likes.length);
+    renderPostsList(posts, c);
+  }, 400);
+}
+
+function searchAll(q) {
+  const c = $('explore-container');
+  if(!c) return;
+  if(!q.trim()) { loadExplore(); return; }
+  const ql = q.toLowerCase();
+  const posts = DEMO_POSTS.filter(p=>{
+    const a=getUser(p.authorId);
+    return p.content.toLowerCase().includes(ql)||(a&&(a.username.includes(ql)||a.fullName.toLowerCase().includes(ql)));
+  });
+  renderPostsList(posts, c);
+}
+
+function renderPostsList(posts, container) {
+  container.innerHTML = '';
+  if(!posts.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-title">Nothing found</div><div class="empty-sub">Try a different search</div></div>`;
+    return;
+  }
+  posts.forEach(p => { const e = renderPost(p); if(e) container.appendChild(e); });
+}
+
+/* ═══ LIKE ════════════════════════════════════════════════════════ */
+function likePost(postId, btn) {
+  const post = getPost(postId);
+  if(!post) return;
+  const idx = post.likes.indexOf(currentUser.id);
+  if(idx===-1) {
+    post.likes.push(currentUser.id);
+    btn.classList.add('liked');
+    btn.classList.add('liked');
+    // trigger animation
+    btn.classList.remove('liked'); void btn.offsetWidth; btn.classList.add('liked');
+    toast('Liked! ❤️', 'like');
+    // add notification
+    if(post.authorId !== currentUser.id) {
+      DEMO_NOTIFICATIONS.unshift({ id:genId(), type:'like', actorId:currentUser.id, postId, read:false, createdAt:new Date().toISOString() });
+      updateNotifBadge();
+    }
+  } else {
+    post.likes.splice(idx,1);
+    btn.classList.remove('liked');
+  }
+  btn.querySelector('.like-count').textContent = post.likes.length;
+}
+
+/* ═══ BOOKMARK ════════════════════════════════════════════════════ */
+function bookmarkPost(postId, btn) {
+  const i = bookmarks.indexOf(postId);
+  if(i===-1) {
+    bookmarks.push(postId);
+    toast('Post saved to Bookmarks 🔖', 'save');
+    if(btn) btn.classList.add('saved');
+  } else {
+    bookmarks.splice(i,1);
+    toast('Removed from Bookmarks');
+    if(btn) btn.classList.remove('saved');
+  }
+  localStorage.setItem('nx_bookmarks', JSON.stringify(bookmarks));
+  // refresh dropdowns
+  document.querySelectorAll('.post-dropdown').forEach(dd=>dd.classList.remove('open'));
+}
+
+function renderBookmarks() {
+  const c = $('bookmarks-container');
+  c.innerHTML = '';
+  const saved = DEMO_POSTS.filter(p=>bookmarks.includes(p.id));
+  if(!saved.length) {
+    c.innerHTML = `<div class="empty-state"><div class="empty-icon">🔖</div><div class="empty-title">No saved posts yet</div><div class="empty-sub">Tap the bookmark icon on any post<br>to save it for later.</div></div>`;
+    return;
+  }
+  saved.forEach(p => { const e=renderPost(p); if(e) c.appendChild(e); });
+}
+
+/* ═══ SHARE ═══════════════════════════════════════════════════════ */
+function sharePost(postId) {
+  navigator.clipboard.writeText(`https://nexus.social/post/${postId}`).catch(()=>{});
+  toast('Link copied to clipboard! 🔗', 'success');
+  document.querySelectorAll('.post-dropdown').forEach(dd=>dd.classList.remove('open'));
+}
+
+/* ═══ DELETE POST ═════════════════════════════════════════════════ */
+function deletePost(postId) {
+  DEMO_POSTS = DEMO_POSTS.filter(p=>p.id!==postId);
+  currentUser.postsCount = Math.max(0,(currentUser.postsCount||0)-1);
+  document.querySelectorAll('.post-dropdown').forEach(dd=>dd.classList.remove('open'));
+  const card = document.querySelector(`[data-post-id="${postId}"]`);
+  if(card){ card.style.opacity='0'; card.style.transform='translateX(-20px)'; setTimeout(()=>card.remove(),300); }
+  toast('Post deleted', 'info');
+}
+
+/* ═══ DROPDOWN ════════════════════════════════════════════════════ */
+function toggleDropdown(id) {
+  document.querySelectorAll('.post-dropdown').forEach(dd=>{ if(dd.id!==id)dd.classList.remove('open'); });
+  $(id)?.classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if(!e.target.closest('.post-menu-btn')&&!e.target.closest('.post-dropdown')) {
+    document.querySelectorAll('.post-dropdown').forEach(dd=>dd.classList.remove('open'));
+  }
+});
+
+/* ═══ CREATE POST ═════════════════════════════════════════════════ */
+function createPost(source) {
+  const textarea = source==='inline' ? $('compose-inline-text') : $('compose-modal-text');
+  const mood = source==='inline' ? currentMoodInline : currentMoodModal;
+  const content = textarea.value.trim();
+  if(!content) { toast('Write something first! ✍️','error'); return; }
+  if(content.length>280) { toast('Post is too long (max 280 chars)','error'); return; }
+
+  const post = {
+    id: genId(),
+    authorId: currentUser.id,
+    content,
+    mood: mood || null,
+    likes: [],
+    comments: [],
+    createdAt: new Date().toISOString()
+  };
+  DEMO_POSTS.unshift(post);
+  currentUser.postsCount = (currentUser.postsCount||0)+1;
+  textarea.value = '';
+  if(source==='inline') { currentMoodInline=null; $('mood-inline').querySelectorAll('.mood-tag').forEach(t=>t.classList.remove('selected')); }
+  else { currentMoodModal=null; closeModal('compose-modal'); }
+
+  toast('Post published! 🎉', 'success');
+  if(activeView==='feed') {
+    const c=$('feed-container');
+    const e=renderPost(post);
+    if(e) c.insertBefore(e,c.firstChild);
+  }
+  updateLiveCount();
+  // reset char count
+  if(source==='inline') { $('inline-count').textContent='280'; $('inline-count').className='char-count'; }
+  else { $('modal-count').textContent='280'; $('modal-count').className='char-count'; }
+}
+
+function onComposeInput(ta, countId) {
+  const remaining = 280 - ta.value.length;
+  const el = $(countId);
+  el.textContent = remaining;
+  el.className = 'char-count' + (remaining<50?' warn':'') + (remaining<10?' danger':'');
+  ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px';
+}
+
+/* ═══ MOOD ════════════════════════════════════════════════════════ */
+function toggleMood(source) {
+  const el = $(`mood-${source}`);
+  el.classList.toggle('open');
+}
+function selectMood(el, source) {
+  el.closest('.mood-selector').querySelectorAll('.mood-tag').forEach(t=>t.classList.remove('selected'));
+  el.classList.add('selected');
+  if(source==='inline') currentMoodInline = el.textContent;
+  else currentMoodModal = el.textContent;
+}
+
+/* ═══ COMMENTS ════════════════════════════════════════════════════ */
+function openComments(postId) {
+  currentPostId = postId;
+  renderComments(postId);
+  openModal('comments-modal');
+}
+
+function renderComments(postId) {
+  const list = $('comments-list');
+  const comments = DEMO_COMMENTS.filter(c=>c.postId===postId);
+  if(!comments.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">💬</div><div class="empty-title">No comments yet</div><div class="empty-sub">Be the first to share your thoughts!</div></div>`;
+    return;
+  }
+  list.innerHTML = comments.map(c => {
+    const a = getUser(c.authorId);
+    if(!a) return '';
+    const liked = c.likes?.includes(currentUser.id);
+    return `
+      <div class="comment-item">
+        <div class="avatar av-sm" style="background:${a.color}" onclick="openUserModal('${a.id}')">${initials(a.fullName)}</div>
+        <div class="comment-content">
+          <div class="comment-author">${a.fullName} <span style="font-size:0.72rem;font-weight:400;color:var(--text3);">@${a.username}</span></div>
+          <div class="comment-text">${c.content}</div>
+          <div class="comment-footer">
+            <span class="comment-time">${timeAgo(c.createdAt)}</span>
+            <button class="comment-like-btn ${liked?'liked':''}" onclick="likeComment('${c.id}',this)">
+              ❤️ <span>${c.likes?.length||0}</span>
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function likeComment(cid, btn) {
+  const c = DEMO_COMMENTS.find(c=>c.id===cid);
+  if(!c) return;
+  c.likes = c.likes||[];
+  const i = c.likes.indexOf(currentUser.id);
+  if(i===-1) { c.likes.push(currentUser.id); btn.classList.add('liked'); }
+  else { c.likes.splice(i,1); btn.classList.remove('liked'); }
+  btn.querySelector('span').textContent = c.likes.length;
+}
+
+function submitComment() {
+  const input = $('comment-input');
+  const text = input.value.trim();
+  if(!text) return;
+  const comment = { id:genId(), postId:currentPostId, authorId:currentUser.id, content:text, likes:[], createdAt:new Date().toISOString() };
+  DEMO_COMMENTS.push(comment);
+  const post = getPost(currentPostId);
+  if(post) { post.comments.push(comment.id); }
+  input.value = '';
+  renderComments(currentPostId);
+  // update count in feed
+  const card = document.querySelector(`[data-post-id="${currentPostId}"]`);
+  if(card) {
+    const countEl = card.querySelector('.comment-btn span');
+    if(countEl) countEl.textContent = DEMO_COMMENTS.filter(c=>c.postId===currentPostId).length;
+  }
+  if(post && post.authorId !== currentUser.id) {
+    DEMO_NOTIFICATIONS.unshift({ id:genId(), type:'comment', actorId:currentUser.id, postId:currentPostId, read:false, createdAt:new Date().toISOString() });
+    updateNotifBadge();
+  }
+}
+
+/* ═══ PEOPLE ══════════════════════════════════════════════════════ */
+function loadPeople(q='') {
+  const grid = $('people-grid');
+  const users = DEMO_USERS.filter(u => {
+    if(u.id===currentUser.id) return false;
+    if(!q) return true;
+    return u.username.includes(q.toLowerCase()) || u.fullName.toLowerCase().includes(q.toLowerCase());
+  });
+  grid.innerHTML = '';
+  if(!users.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1"><div class="empty-state"><div class="empty-icon">👥</div><div class="empty-title">No users found</div></div></div>`;
+    return;
+  }
+  users.forEach(u => {
+    const isFollowing = currentUser.following?.includes(u.id);
+    const card = el('div','person-card');
+    card.innerHTML = `
+      <div class="avatar av-lg" style="background:${u.color};margin:0 auto;">${initials(u.fullName)}</div>
+      <div class="pc-name">${u.fullName}</div>
+      <div class="pc-handle">@${u.username}</div>
+      <div class="pc-bio">${u.bio||'No bio yet.'}</div>
+      <div class="pc-stats">
+        <div class="pc-stat"><div class="pc-stat-n">${u.postsCount||0}</div><div class="pc-stat-l">Posts</div></div>
+        <div class="pc-stat"><div class="pc-stat-n">${u.followersCount||0}</div><div class="pc-stat-l">Followers</div></div>
+        <div class="pc-stat"><div class="pc-stat-n">${u.followingCount||0}</div><div class="pc-stat-l">Following</div></div>
+      </div>
+      <button class="follow-btn ${isFollowing?'following':''}" onclick="toggleFollow('${u.id}',this,event)">${isFollowing?'✓ Following':'+ Follow'}</button>`;
+    card.onclick = (e) => { if(!e.target.closest('.follow-btn')) openUserModal(u.id); };
+    grid.appendChild(card);
+  });
+}
+
+/* ═══ FOLLOW ══════════════════════════════════════════════════════ */
+function toggleFollow(userId, btn, e) {
+  if(e) e.stopPropagation();
+  const u = DEMO_USERS.find(u=>u.id===userId);
+  if(!u) return;
+  const isFollowing = currentUser.following?.includes(userId);
+  if(isFollowing) {
+    currentUser.following = currentUser.following.filter(id=>id!==userId);
+    currentUser.followingCount = Math.max(0,(currentUser.followingCount||1)-1);
+    u.followers = u.followers?.filter(id=>id!==currentUser.id)||[];
+    u.followersCount = Math.max(0,(u.followersCount||1)-1);
+    if(btn) { btn.textContent='+ Follow'; btn.classList.remove('following'); }
+    toast(`Unfollowed @${u.username}`);
+  } else {
+    currentUser.following = currentUser.following||[];
+    currentUser.following.push(userId);
+    currentUser.followingCount = (currentUser.followingCount||0)+1;
+    u.followers = u.followers||[];
+    u.followers.push(currentUser.id);
+    u.followersCount = (u.followersCount||0)+1;
+    if(btn) { btn.textContent='✓ Following'; btn.classList.add('following'); }
+    toast(`Now following @${u.username} 👋`, 'follow');
+    DEMO_NOTIFICATIONS.unshift({ id:genId(), type:'follow', actorId:currentUser.id, userId, read:false, createdAt:new Date().toISOString() });
+    updateNotifBadge();
+  }
+  loadSuggested();
+}
+
+/* ═══ NOTIFICATIONS ════════════════════════════════════════════════ */
+function updateNotifBadge() {
+  const unread = DEMO_NOTIFICATIONS.filter(n=>!n.read).length;
+  const badge = $('notif-badge');
+  badge.textContent = unread;
+  badge.style.display = unread ? '' : 'none';
+}
+
+function clearNotifs() {
+  DEMO_NOTIFICATIONS.forEach(n=>n.read=true);
+  updateNotifBadge();
+  renderNotifications();
+  toast('All notifications marked as read ✓', 'success');
+}
+
+function renderNotifications() {
+  const c = $('notifs-container');
+  c.innerHTML = '';
+  if(!DEMO_NOTIFICATIONS.length) {
+    c.innerHTML = `<div class="empty-state"><div class="empty-icon">🔔</div><div class="empty-title">All caught up!</div><div class="empty-sub">No new notifications.</div></div>`;
+    return;
+  }
+  DEMO_NOTIFICATIONS.forEach(n => {
+    const actor = getUser(n.actorId);
+    if(!actor) return;
+    const item = el('div', `notif-item ${n.read?'':'unread'}`);
+    item.onclick = () => { n.read=true; updateNotifBadge(); item.classList.remove('unread'); };
+
+    const iconMap = { like:'❤️', comment:'💬', follow:'👤' };
+    const iconBg = { like:'rgba(255,92,122,0.15)', comment:'rgba(0,212,255,0.15)', follow:'rgba(124,111,255,0.15)' };
+    let text = '';
+    if(n.type==='like') text = `<strong>${actor.fullName}</strong> liked your post`;
+    else if(n.type==='comment') text = `<strong>${actor.fullName}</strong> commented on your post`;
+    else if(n.type==='follow') text = `<strong>${actor.fullName}</strong> started following you`;
+
+    item.innerHTML = `
+      <div class="av-wrap">
+        <div class="avatar av-sm" style="background:${actor.color}">${initials(actor.fullName)}</div>
+      </div>
+      <div class="notif-icon" style="background:${iconBg[n.type]}">${iconMap[n.type]}</div>
+      <div class="notif-text">
+        <div class="notif-body">${text}</div>
+        <div class="notif-time">${timeAgo(n.createdAt)}</div>
+      </div>
+      ${!n.read?'<div class="notif-unread-dot"></div>':''}`;
+    c.appendChild(item);
+  });
+  updateNotifBadge();
+}
+
+/* ═══ PROFILE ══════════════════════════════════════════════════════ */
+function renderMyProfile() {
+  renderProfile(currentUser.id, $('profile-container'));
+}
+
+function renderProfile(userId, container) {
+  const u = DEMO_USERS.find(u=>u.id===userId);
+  if(!u) return;
+  const isMe = u.id===currentUser.id;
+  const isFollowing = !isMe && currentUser.following?.includes(u.id);
+  const posts = DEMO_POSTS.filter(p=>p.authorId===u.id).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+
+  container.innerHTML = `
+    <div class="profile-banner"></div>
+    <div class="profile-info-section">
+      <div class="profile-avatar-row">
+        <div class="profile-avatar-wrap">
+          <div class="profile-av avatar" style="background:${u.color}">${initials(u.fullName)}</div>
+          ${isMe?'<div class="profile-verified">✓</div>':''}
+        </div>
+        <div class="profile-actions-row">
+          ${isMe
+            ? `<button class="btn-msg" onclick="openEditProfile()">✏️ Edit Profile</button>`
+            : `<button class="btn-follow-lg ${isFollowing?'following':''}" onclick="toggleFollow('${u.id}',this)">${isFollowing?'✓ Following':'+ Follow'}</button>
+               <button class="btn-msg" onclick="toast('DMs coming soon! 📩')">💬 Message</button>`
+          }
+        </div>
+      </div>
+      <div class="profile-name">${u.fullName}</div>
+      <div class="profile-handle">@${u.username}</div>
+      <div class="profile-bio">${u.bio||'No bio yet.'}</div>
+      <div class="profile-joined">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Joined ${new Date().toLocaleDateString('en',{month:'long',year:'numeric'})}
+      </div>
+      <div class="profile-stats-row">
+        <div class="pstat"><div class="pstat-n">${posts.length}</div><div class="pstat-l">Posts</div></div>
+        <div class="pstat"><div class="pstat-n">${u.followersCount||0}</div><div class="pstat-l">Followers</div></div>
+        <div class="pstat"><div class="pstat-n">${u.followingCount||0}</div><div class="pstat-l">Following</div></div>
+      </div>
+    </div>
+    <div class="profile-tabs">
+      <button class="ptab active" onclick="switchProfileTab(this,'posts-tab')">Posts</button>
+      <button class="ptab" onclick="switchProfileTab(this,'liked-tab')">Liked</button>
+      ${isMe?'<button class="ptab" onclick="switchProfileTab(this,\'saved-tab\')">Saved</button>':''}
+    </div>
+    <div id="posts-tab">
+      ${posts.length ? '' : `<div class="empty-state"><div class="empty-icon">📝</div><div class="empty-title">No posts yet</div><div class="empty-sub">Share your first post!</div></div>`}
+    </div>
+    <div id="liked-tab" class="hidden"></div>
+    ${isMe?`<div id="saved-tab" class="hidden"></div>`:''}`;
+
+  posts.forEach(p => { const e=renderPost(p); if(e) $('posts-tab').appendChild(e); });
+
+  // Liked tab
+  const liked = DEMO_POSTS.filter(p=>p.likes.includes(u.id));
+  const likedTab = $('liked-tab');
+  if(liked.length) liked.forEach(p=>{ const e=renderPost(p); if(e) likedTab.appendChild(e); });
+  else likedTab.innerHTML=`<div class="empty-state"><div class="empty-icon">❤️</div><div class="empty-title">No liked posts</div></div>`;
+
+  // Saved tab (me only)
+  if(isMe) {
+    const savedTab = $('saved-tab');
+    const saved = DEMO_POSTS.filter(p=>bookmarks.includes(p.id));
+    if(saved.length) saved.forEach(p=>{ const e=renderPost(p); if(e) savedTab.appendChild(e); });
+    else savedTab.innerHTML=`<div class="empty-state"><div class="empty-icon">🔖</div><div class="empty-title">No saved posts</div></div>`;
+  }
+}
+
+function switchProfileTab(btn, tabId) {
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  ['posts-tab','liked-tab','saved-tab'].forEach(id=>$(id)&&$(id).classList.add('hidden'));
+  $(tabId)?.classList.remove('hidden');
+}
+
+/* ═══ EDIT PROFILE ════════════════════════════════════════════════ */
+function openEditProfile() {
+  $('edit-name').value = currentUser.fullName;
+  $('edit-bio').value = currentUser.bio||'';
+  const colorOpts = $('color-options');
+  colorOpts.innerHTML = COLORS.map(c=>`<div class="color-opt ${c===currentUser.color?'selected':''}" style="background:${c}" onclick="selectColor(this,'${c}')"></div>`).join('');
+  openModal('edit-modal');
+}
+
+function selectColor(el, color) {
+  document.querySelectorAll('.color-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  currentUser._newColor = color;
+}
+
+function saveProfile() {
+  currentUser.fullName = $('edit-name').value.trim() || currentUser.fullName;
+  currentUser.bio = $('edit-bio').value.trim();
+  if(currentUser._newColor) { currentUser.color = currentUser._newColor; delete currentUser._newColor; }
+  renderSidebar();
+  closeModal('edit-modal');
+  renderMyProfile();
+  toast('Profile updated! ✅', 'success');
+}
+
+/* ═══ USER MODAL ══════════════════════════════════════════════════ */
+function openUserModal(userId) {
+  const content = $('user-modal-content');
+  content.innerHTML = '';
+  renderProfile(userId, content);
+  openModal('user-modal');
+}
+
+/* ═══ SUGGESTED ════════════════════════════════════════════════════ */
+function loadSuggested() {
+  const c = $('rp-suggested');
+  const suggestions = DEMO_USERS.filter(u=>u.id!==currentUser.id&&!currentUser.following?.includes(u.id)).slice(0,4);
+  if(!suggestions.length) { c.innerHTML='<div style="font-size:0.8rem;color:var(--text3);text-align:center;padding:10px;">You\'re following everyone! 🎉</div>'; return; }
+  c.innerHTML = suggestions.map(u=>`
+    <div class="sug-user">
+      <div class="av-wrap">
+        <div class="avatar av-sm" style="background:${u.color}" onclick="openUserModal('${u.id}')">${initials(u.fullName)}</div>
+      </div>
+      <div class="sug-info">
+        <div class="sug-name">${u.fullName}</div>
+        <div class="sug-handle">@${u.username}</div>
+      </div>
+      <button class="sug-follow" onclick="toggleFollow('${u.id}',this,event)">Follow</button>
+    </div>`).join('');
+}
+
+/* ═══ LIVE COUNT ══════════════════════════════════════════════════ */
+function updateLiveCount() {
+  const base = 1247;
+  $('live-count').textContent = (base + DEMO_POSTS.length).toLocaleString();
+}
+
+/* ═══ MODAL SYSTEM ════════════════════════════════════════════════ */
+function openModal(id) { $(id)?.classList.remove('hidden'); document.body.style.overflow='hidden'; }
+function closeModal(id) { $(id)?.classList.add('hidden'); document.body.style.overflow=''; }
+function openComposeModal() { openModal('compose-modal'); $('compose-modal-text')?.focus(); }
+
+// Close modals on backdrop click
+document.querySelectorAll('.modal-backdrop').forEach(m=>{
+  m.addEventListener('click', e=>{ if(e.target===m) closeModal(m.id); });
+});
+
+// Close on Escape
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') document.querySelectorAll('.modal-backdrop:not(.hidden)').forEach(m=>closeModal(m.id)); });
+
+/* ═══ INIT ════════════════════════════════════════════════════════ */
+applyTheme(theme);
+updateNotifBadge();
+
+// Keyboard shortcut: N = new post, E = explore, F = feed
+document.addEventListener('keydown', e => {
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  if(e.key==='n'||e.key==='N') openComposeModal();
+  if(e.key==='f'||e.key==='F') showView('feed', document.querySelector('[data-view="feed"]'));
+  if(e.key==='e'||e.key==='E') showView('explore', document.querySelector('[data-view="explore"]'));
+});
+</script>
+</body>
+</html>
